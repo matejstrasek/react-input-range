@@ -4,7 +4,6 @@
 /build
 /coverage
 /example/build
-/lib
 /node_modules
 /out
 *.idea
