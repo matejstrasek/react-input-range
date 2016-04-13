@@ -47,8 +47,10 @@ var _propTypes = require('./propTypes');
 var internals = new WeakMap();
 
 var KeyCode = {
+  DOWN_ARROW: 40,
   LEFT_ARROW: 37,
-  RIGHT_ARROW: 39
+  RIGHT_ARROW: 39,
+  UP_ARROW: 38
 };
 
 function isWithinRange(inputRange, values) {
@@ -122,7 +124,9 @@ function getKeyByPosition(inputRange, position) {
 }
 
 function renderSliders(inputRange) {
-  var classNames = inputRange.props.classNames;
+  var _inputRange$props = inputRange.props;
+  var classNames = _inputRange$props.classNames;
+  var formatter = _inputRange$props.formatter;
 
   var sliders = [];
   var keys = getKeys(inputRange);
@@ -141,9 +145,9 @@ function renderSliders(inputRange) {
       var percentage = percentages[key];
       var ref = 'slider' + (0, _util.captialize)(key);
 
-      var _inputRange$props = inputRange.props;
-      var maxValue = _inputRange$props.maxValue;
-      var minValue = _inputRange$props.minValue;
+      var _inputRange$props2 = inputRange.props;
+      var maxValue = _inputRange$props2.maxValue;
+      var minValue = _inputRange$props2.minValue;
 
       if (key === 'min') {
         maxValue = values.max;
@@ -153,6 +157,7 @@ function renderSliders(inputRange) {
 
       var slider = _react2['default'].createElement(_Slider2['default'], {
         classNames: classNames,
+        formatter: formatter,
         key: key,
         maxValue: maxValue,
         minValue: minValue,
@@ -316,10 +321,14 @@ var InputRange = (function (_React$Component) {
 
       switch (event.keyCode) {
         case KeyCode.LEFT_ARROW:
+        case KeyCode.DOWN_ARROW:
+          event.preventDefault();
           this.decrementValue(key);
           break;
 
         case KeyCode.RIGHT_ARROW:
+        case KeyCode.UP_ARROW:
+          event.preventDefault();
           this.incrementValue(key);
           break;
 
@@ -333,6 +342,8 @@ var InputRange = (function (_React$Component) {
       if (this.props.disabled) {
         return;
       }
+
+      event.preventDefault();
 
       var key = getKeyByPosition(this, position);
 
@@ -413,7 +424,9 @@ var InputRange = (function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var classNames = this.props.classNames;
+      var _props = this.props;
+      var classNames = _props.classNames;
+      var formatter = _props.formatter;
 
       var componentClassName = getComponentClassName(this);
       var values = _valueTransformer2['default'].valuesFromProps(this);
@@ -440,6 +453,7 @@ var InputRange = (function (_React$Component) {
           _Track2['default'],
           {
             classNames: classNames,
+            formatter: formatter,
             ref: 'track',
             percentages: percentages,
             onTrackMouseDown: this.handleTrackMouseDown },
@@ -488,6 +502,7 @@ InputRange.propTypes = {
   classNames: _react2['default'].PropTypes.objectOf(_react2['default'].PropTypes.string),
   defaultValue: _propTypes.maxMinValuePropType,
   disabled: _react2['default'].PropTypes.bool,
+  formatter: _react2['default'].PropTypes.func,
   maxValue: _propTypes.maxMinValuePropType,
   minValue: _propTypes.maxMinValuePropType,
   name: _react2['default'].PropTypes.string,
@@ -689,6 +704,8 @@ var Slider = (function (_React$Component) {
       var classNames = this.props.classNames;
       var style = getStyle(this);
 
+      var labelValue = this.props.formatter ? this.props.formatter(this.props.value) : this.props.value;
+
       return _react2['default'].createElement(
         'span',
         {
@@ -700,7 +717,7 @@ var Slider = (function (_React$Component) {
           {
             className: classNames.labelValue,
             containerClassName: classNames.labelContainer },
-          this.props.value
+          labelValue
         ),
         _react2['default'].createElement('a', {
           'aria-labelledby': this.props.ariaLabelledby,
@@ -727,6 +744,7 @@ exports['default'] = Slider;
 Slider.propTypes = {
   ariaLabelledby: _react2['default'].PropTypes.string,
   classNames: _react2['default'].PropTypes.objectOf(_react2['default'].PropTypes.string),
+  formatter: _react2['default'].PropTypes.func,
   maxValue: _react2['default'].PropTypes.number,
   minValue: _react2['default'].PropTypes.number,
   onSliderKeyDown: _react2['default'].PropTypes.func.isRequired,
