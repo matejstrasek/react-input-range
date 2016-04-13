@@ -147,6 +147,8 @@ export default class Slider extends React.Component {
     const classNames = this.props.classNames;
     const style = getStyle(this);
 
+    const labelValue = this.props.formatter ? this.props.formatter(this.props.value) : this.props.value;
+
     return (
       <span
         className={ classNames.sliderContainer }
@@ -155,9 +157,8 @@ export default class Slider extends React.Component {
         <Label
           className={ classNames.labelValue }
           containerClassName={ classNames.labelContainer }>
-          { this.props.value }
+          { labelValue }
         </Label>
-
         <a
           aria-labelledby={ this.props.ariaLabelledby }
           aria-valuemax={ this.props.maxValue }
@@ -193,6 +194,7 @@ export default class Slider extends React.Component {
 Slider.propTypes = {
   ariaLabelledby: React.PropTypes.string,
   classNames: React.PropTypes.objectOf(React.PropTypes.string),
+  formatter: React.PropTypes.func,
   maxValue: React.PropTypes.number,
   minValue: React.PropTypes.number,
   onSliderKeyDown: React.PropTypes.func.isRequired,

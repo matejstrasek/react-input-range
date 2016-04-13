@@ -7,6 +7,10 @@ import { renderComponent, rerenderComponent } from './TestUtil';
 let inputRange;
 let onChange;
 
+const formatter = string =>{
+  return 'i r a formatted: ' + string;
+};
+
 describe('InputRange', () => {
   let value;
   let values;
@@ -20,7 +24,7 @@ describe('InputRange', () => {
 
     onChange = jasmine.createSpy('onChange');
     inputRange = renderComponent(
-      <InputRange maxValue={20} minValue={0} value={values} onChange={onChange} />
+      <InputRange maxValue={20} minValue={0} value={values} onChange={onChange} formatter={formatter}/>
     );
   });
 
@@ -84,7 +88,7 @@ describe('InputRange', () => {
     describe('if it is not a multi-value slider', () => {
       beforeEach(() => {
         inputRange = renderComponent(
-          <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} />
+          <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} formatter={formatter}/>
         );
       });
 
@@ -200,7 +204,7 @@ describe('InputRange', () => {
     });
 
     it('should not set the position of a slider if disabled', () => {
-      inputRange = renderComponent(<InputRange disabled={true} defaultValue={0} onChange={onChange}/>);
+      inputRange = renderComponent(<InputRange disabled={true} defaultValue={0} onChange={onChange} formatter={formatter}/>);
       spyOn(inputRange, 'updatePosition');
       inputRange.handleSliderMouseMove(event, slider);
 
@@ -236,7 +240,7 @@ describe('InputRange', () => {
       });
 
       it('should not decrement value if disabled', () => {
-        inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
+        inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange} formatter={formatter}/>);
         spyOn(inputRange, 'decrementValue');
         inputRange.handleSliderKeyDown(event, slider);
 
@@ -268,7 +272,7 @@ describe('InputRange', () => {
       });
 
       it('should not decrement value if disabled', () => {
-        inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
+        inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange} formatter={formatter}/>);
         spyOn(inputRange, 'decrementValue');
         inputRange.handleSliderKeyDown(event, slider);
 
@@ -300,7 +304,7 @@ describe('InputRange', () => {
       });
 
       it('should not increment value if disabled', () => {
-        inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
+        inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange} formatter={formatter}/>);
         spyOn(inputRange, 'incrementValue');
         inputRange.handleSliderKeyDown(event, slider);
 
@@ -332,7 +336,7 @@ describe('InputRange', () => {
       });
 
       it('should not increment value if disabled', () => {
-        inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
+        inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange} formatter={formatter}/>);
         spyOn(inputRange, 'incrementValue');
         inputRange.handleSliderKeyDown(event, slider);
 
@@ -368,14 +372,14 @@ describe('InputRange', () => {
     });
 
     it('should not call event.preventDefault if disabled', () => {
-      inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
+      inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange} formatter={formatter}/>);
       inputRange.handleTrackMouseDown(event, track, position);
 
       expect(event.preventDefault).not.toHaveBeenCalledWith();
     });
 
     it('should not set a new position if disabled', () => {
-      inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange}/>);
+      inputRange = renderComponent(<InputRange disabled={true} defaultValue={10} onChange={onChange} formatter={formatter}/>);
       spyOn(inputRange, 'updatePosition');
       inputRange.handleTrackMouseDown(event, track, position);
 
@@ -405,7 +409,7 @@ describe('InputRange', () => {
     describe('if it is not a multi-value slider', () => {
       beforeEach(() => {
         inputRange = renderComponent(
-          <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} />
+          <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} formatter={formatter}/>
         );
         spyOn(inputRange, 'updatePosition');
       });
@@ -434,7 +438,7 @@ describe('InputRange', () => {
       mouseUpEvent.initMouseEvent('mouseup', true);
 
       inputRange = renderComponent(
-        <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} onChangeComplete={onChangeComplete}/>
+        <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} onChangeComplete={onChangeComplete} formatter={formatter}/>
       );
       slider = ReactDOM.findDOMNode(inputRange.refs.sliderMax);
     });
@@ -443,7 +447,7 @@ describe('InputRange', () => {
       slider.dispatchEvent(mouseDownEvent);
       value += 2;
       inputRange = rerenderComponent(
-        <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} onChangeComplete={onChangeComplete}/>
+        <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} onChangeComplete={onChangeComplete} formatter={formatter}/>
       );
       slider.dispatchEvent(mouseUpEvent);
 
@@ -453,7 +457,7 @@ describe('InputRange', () => {
     it('should not call onChangeComplete if value has not changed since the start of interaction', () => {
       slider.dispatchEvent(mouseDownEvent);
       inputRange = rerenderComponent(
-        <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} onChangeComplete={onChangeComplete}/>
+        <InputRange maxValue={20} minValue={0} value={value} onChange={onChange} onChangeComplete={onChangeComplete} formatter={formatter}/>
       );
       slider.dispatchEvent(mouseUpEvent);
 

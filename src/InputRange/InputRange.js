@@ -162,8 +162,9 @@ function getKeyByPosition(inputRange, position) {
  * @param {InputRange} inputRange - React component
  * @return {Array.<string>} Array of HTML
  */
+
 function renderSliders(inputRange) {
-  const { classNames } = inputRange.props;
+  const { classNames, formatter } = inputRange.props;
   const sliders = [];
   const keys = getKeys(inputRange);
   const values = valueTransformer.valuesFromProps(inputRange);
@@ -185,6 +186,7 @@ function renderSliders(inputRange) {
     const slider = (
       <Slider
         classNames={ classNames }
+        formatter={ formatter }
         key={ key }
         maxValue={ maxValue }
         minValue={ minValue }
@@ -530,7 +532,7 @@ export default class InputRange extends React.Component {
    * @return {string} Component JSX
    */
   render() {
-    const { classNames } = this.props;
+    const { classNames, formatter } = this.props;
     const componentClassName = getComponentClassName(this);
     const values = valueTransformer.valuesFromProps(this);
     const percentages = valueTransformer.percentagesFromValues(this, values);
@@ -552,6 +554,7 @@ export default class InputRange extends React.Component {
 
         <Track
           classNames={ classNames }
+          formatter={ formatter }
           ref="track"
           percentages={ percentages }
           onTrackMouseDown={ this.handleTrackMouseDown }>
@@ -591,6 +594,7 @@ InputRange.propTypes = {
   classNames: React.PropTypes.objectOf(React.PropTypes.string),
   defaultValue: maxMinValuePropType,
   disabled: React.PropTypes.bool,
+  formatter: React.PropTypes.func,
   maxValue: maxMinValuePropType,
   minValue: maxMinValuePropType,
   name: React.PropTypes.string,
