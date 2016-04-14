@@ -15,8 +15,8 @@ import { maxMinValuePropType } from './propTypes';
  * A map for storing internal members
  * @const {WeakMap}
  */
-const internals = new WeakMap();
-
+// const internals = new WeakMap();
+let _startValue = null;
 /**
  * An object storing keyboard key codes
  * @const {Object.<string, number>}
@@ -236,7 +236,7 @@ export default class InputRange extends React.Component {
     super(props);
 
     // Private
-    internals.set(this, {});
+    // internals.set(this, {});
 
     // Auto-bind
     autobind([
@@ -436,13 +436,11 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleInteractionStart() {
-    const _this = internals.get(this);
-
-    if (!this.props.onChangeComplete || isDefined(_this.startValue)) {
+    if (!this.props.onChangeComplete || (_startValue !== null)) {
       return;
     }
 
-    _this.startValue = this.props.value;
+    _startValue = this.props.value;
   }
 
   /**
@@ -450,17 +448,15 @@ export default class InputRange extends React.Component {
    * @param {SyntheticEvent} event - User event
    */
   handleInteractionEnd() {
-    const _this = internals.get(this);
-
-    if (!this.props.onChangeComplete || !isDefined(_this.startValue)) {
+    if (!this.props.onChangeComplete || !isDefined(_startValue)) {
       return;
     }
 
-    if (_this.startValue !== this.props.value) {
+    if (_startValue !== this.props.value) {
       this.props.onChangeComplete(this, this.props.value);
     }
 
-    _this.startValue = null;
+    _startValue = null;
   }
 
   /**

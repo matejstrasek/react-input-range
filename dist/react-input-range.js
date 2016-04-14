@@ -44,7 +44,7 @@ var _util = require('./util');
 
 var _propTypes = require('./propTypes');
 
-var internals = new WeakMap();
+var _startValue = null;
 
 var KeyCode = {
   DOWN_ARROW: 40,
@@ -230,8 +230,6 @@ var InputRange = (function (_React$Component) {
 
     _get(Object.getPrototypeOf(InputRange.prototype), 'constructor', this).call(this, props);
 
-    internals.set(this, {});
-
     (0, _util.autobind)(['handleInteractionEnd', 'handleInteractionStart', 'handleKeyDown', 'handleKeyUp', 'handleMouseDown', 'handleMouseUp', 'handleSliderKeyDown', 'handleSliderMouseMove', 'handleTouchStart', 'handleTouchEnd', 'handleTrackMouseDown'], this);
   }
 
@@ -352,28 +350,24 @@ var InputRange = (function (_React$Component) {
   }, {
     key: 'handleInteractionStart',
     value: function handleInteractionStart() {
-      var _this = internals.get(this);
-
-      if (!this.props.onChangeComplete || (0, _util.isDefined)(_this.startValue)) {
+      if (!this.props.onChangeComplete || _startValue !== null) {
         return;
       }
 
-      _this.startValue = this.props.value;
+      _startValue = this.props.value;
     }
   }, {
     key: 'handleInteractionEnd',
     value: function handleInteractionEnd() {
-      var _this = internals.get(this);
-
-      if (!this.props.onChangeComplete || !(0, _util.isDefined)(_this.startValue)) {
+      if (!this.props.onChangeComplete || !(0, _util.isDefined)(_startValue)) {
         return;
       }
 
-      if (_this.startValue !== this.props.value) {
+      if (_startValue !== this.props.value) {
         this.props.onChangeComplete(this, this.props.value);
       }
 
-      _this.startValue = null;
+      _startValue = null;
     }
   }, {
     key: 'handleKeyDown',
